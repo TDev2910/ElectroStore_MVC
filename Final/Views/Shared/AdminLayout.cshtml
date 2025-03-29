@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+        }
+
+            .sidebar a {
+                padding: 10px 15px;
+                text-decoration: none;
+                font-size: 18px;
+                color: white;
+                display: block;
+            }
+
+                .sidebar a:hover {
+                    background-color: #007bff;
+                    color: white;
+                }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="text-center text-light">
+            <h4>Admin Panel</h4>
+            <p>Xin chào, @User.Identity.Name!</p>
+        </div>
+        <a asp-controller="Admin" asp-action="Dashboard">Trang chủ</a>
+        <a asp-controller="Admin" asp-action="Index">Cập nhật thông tin sản phẩm</a>
+        <a asp-controller="Admin" asp-action="EnterSecurityCode">Quản lý người dùng</a>
+        <a asp-controller="Admin" asp-action="OrderList">Quản lý đơn hàng</a>
+        <a asp-controller="Admin" asp-action="FeedbackList">Quản lý phản hồi</a>
+        <a asp-controller="Home" asp-action="Logout">Đăng xuất</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <span class="navbar-text">
+                Admin Panel
+            </span>
+        </nav>
+        <div class="container mt-4">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

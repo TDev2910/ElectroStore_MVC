@@ -1,0 +1,184 @@
+﻿@model OrderModel
+
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<h2 class="mb-4 text-primary">🛒 Thông Tin Đơn Hàng</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<form method="post" asp-action="ConfirmOrder" asp-controller="Order">
+    <div class="row">
+        <!-- Cột bên trái -->
+        <div class="col-md-7">
+            <h5 class="fw-bold">GIAO HÀNG ĐẾN</h5>
+
+            <div class="form-group">
+                <label for="LastName">Họ *</label>
+                <input type="text" asp-for="LastName" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="FirstName">Tên *</label>
+                <input type="text" asp-for="FirstName" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Phone">Số điện thoại *</label>
+                <input type="text" asp-for="Phone" class="form-control" required />
+            </div>
+
+             <div class="form-group"> 
+                 <label for="Email">Email *</label> 
+                 <input type="email" asp-for="Email" class="form-control" required /> 
+             </div> 
+
+            <h5 class="fw-bold mt-4">PHƯƠNG THỨC VẬN CHUYỂN</h5>
+            <div class="form-group">
+                <select asp-for="ShippingMethod" class="form-control" id="shippingMethod" required>
+                    <option value="Giao hàng tận nơi">Giao hàng tận nơi</option>
+                    <option value="Hẹn lấy tại cửa hàng">Hẹn lấy tại cửa hàng</option>
+                </select>
+            </div>
+
+            <div id="addressContainer" class="form-group">
+                <label for="Address">Địa chỉ *</label>
+                <input type="text" asp-for="Address" class="form-control" required />
+            </div>
+
+            <div id="storeContainer" class="form-group" style="display: none;">
+                <label for="City">Tỉnh thành *</label>
+                <select id="citySelect" asp-for="City" class="form-control" onchange="updateStoreOptions()">
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Vũng Tàu">Vũng Tàu</option>
+                </select>
+
+                <label for="Store">Cửa hàng *</label>
+                <select id="storeSelect" asp-for="Store" class="form-control">
+                    <!-- Các cửa hàng sẽ được cập nhật từ JavaScript -->
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="Notes">Ghi chú</label>
+                <textarea asp-for="Notes" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="PaymentMethod">Phương thức thanh toán</label>
+                <select asp-for="PaymentMethod" class="form-control" required>
+                    <option value="COD">Thanh toán khi nhận hàng</option>
+                    <option value="VNPAY">Thanh toán VNPAY</option>
+                </select>
+            </div>         
+            <button type="submit" class="btn btn-success mt-3">Xác nhận đơn hàng</button>
+        </div>
+
+        <!-- Cột bên phải -->
+        <div class="col-md-5">
+            <div class="card p-3">
+                <h5 class="fw-bold">CHI TIẾT ĐƠN HÀNG</h5>
+                @if (Model.CartItems != null && Model.CartItems.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Giá</th>
+                                <th>Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <tr>
+                                    <td>@item.Product.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@string.Format("{0:N0} đ", item.Price)</td>
+                                    <td>@string.Format("{0:N0} đ", item.Price * item.Quantity)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Giỏ hàng trống.</p>
+                }
+                <hr>
+                <h4 class="text-danger fw-bold text-end">💰 Tổng cộng: @string.Format("{0:N0} đ", ViewData["TotalPrice"])</h4>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    // Cập nhật cửa hàng khi thành phố được chọn
+    function updateStoreOptions() {
+        var citySelect = document.getElementById("citySelect");
+        var storeSelect = document.getElementById("storeSelect");
+        var selectedCity = citySelect.value;
+
+        // Xóa các cửa hàng cũ
+        storeSelect.innerHTML = '';
+
+        // Định nghĩa các cửa hàng cho mỗi thành phố
+        var storeOptions = {
+            "Hồ Chí Minh": [
+                "12 Đô Lương, Quận Tân Bình",
+                "45 Nguyễn Thái Bình, Quận 1",
+                "10 Phan Văn Hớn, Quận 12"
+            ],
+            "Hà Nội": [
+                "20 Đặng Tiến Đông, Quận Đống Đa",
+                "5 Phố Huế, Quận Hai Bà Trưng",
+                "36 Lê Thanh Nghị, Quận Hai Bà Trưng"
+            ],
+            "Vũng Tàu": [
+                "50 Thùy Vân, Vũng Tàu",
+                "12 Võ Thị Sáu, Vũng Tàu",
+                "15 Lê Lợi, Vũng Tàu"
+            ]
+        };
+
+        // Tạo các cửa hàng mới cho thành phố được chọn
+        var stores = storeOptions[selectedCity];
+        if (stores) {
+            stores.forEach(function(store) {
+                var option = document.createElement("option");
+                option.value = store;
+                option.textContent = store;
+                storeSelect.appendChild(option);
+            });
+        }
+
+        // Hiển thị phần cửa hàng khi chọn "Hẹn lấy tại cửa hàng"
+        document.getElementById("storeContainer").style.display = 'block';
+    }
+
+    // Đảm bảo các phần liên quan đến địa chỉ và cửa hàng chỉ hiển thị khi chọn phương thức vận chuyển tương ứng
+    document.getElementById("shippingMethod").addEventListener("change", function () {
+        let value = this.value;
+        document.getElementById("addressContainer").style.display = value === "Giao hàng tận nơi" ? "block" : "none";
+        document.getElementById("storeContainer").style.display = value === "Hẹn lấy tại cửa hàng" ? "block" : "none";
+    });
+
+    // Khi trang được tải lại, đảm bảo các phần được hiển thị đúng
+    window.onload = function() {
+        let shippingMethod = document.getElementById("shippingMethod").value;
+        document.getElementById("addressContainer").style.display = shippingMethod === "Giao hàng tận nơi" ? "block" : "none";
+        document.getElementById("storeContainer").style.display = shippingMethod === "Hẹn lấy tại cửa hàng" ? "block" : "none";
+
+        // Cập nhật cửa hàng khi trang được tải lại
+        updateStoreOptions();
+    };
+</script>

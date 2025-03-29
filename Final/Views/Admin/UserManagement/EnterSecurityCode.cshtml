@@ -1,0 +1,37 @@
+﻿@model Final.Controllers.SecurityCodeViewModel
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Xác nhận mã bảo mật";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4 text-center" style="width: 350px;">
+        <h5 class="text-center">Nhập mã bảo mật</h5>
+
+        <!-- Thêm chú thích -->
+        <p class="text-muted">Mời bạn nhập mã bảo mật cấp 2</p>
+
+        <form method="post" asp-action="ValidateSecurityCode" id="securityCodeForm">
+            <div class="d-flex justify-content-center gap-2">
+                <input type="text" name="code1" id="code-1" maxlength="1" required class="form-control text-center fw-bold code-input" oninput="moveToNext(this, 1)" />
+                <input type="text" name="code2" id="code-2" maxlength="1" required class="form-control text-center fw-bold code-input" oninput="moveToNext(this, 2)" />
+                <input type="text" name="code3" id="code-3" maxlength="1" required class="form-control text-center fw-bold code-input" oninput="moveToNext(this, 3)" />
+                <input type="text" name="code4" id="code-4" maxlength="1" required class="form-control text-center fw-bold code-input" oninput="moveToNext(this, 4)" />
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-dark w-100" id="verifyBtn">Xác nhận</button>
+            </div>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+        </form>
+    </div>
+</div>

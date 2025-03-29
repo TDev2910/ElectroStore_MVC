@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Final.Models.UserFeedback>
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2>Danh sách phản hồi</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-primary" onclick="document.getElementById('updateStatusForm').style.display='block'">Cập nhật trạng thái</button>
+</div>
+
+<div id="updateStatusForm" style="display:none;">
+    <form asp-action="UpdateFeedbackStatus" method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label for="FeedbackId">Họ tên</label>
+            <select id="FeedbackId" name="FeedbackId" class="form-control">
+                @foreach (var feedback in Model)
+                {
+                    <option value="@feedback.Id">@feedback.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Status">Trạng thái phản hồi</label>
+            <select id="Status" name="Status" class="form-control">
+                <option value="Chưa trả lời">Chưa trả lời</option>
+                <option value="Đã trả lời">Đã trả lời</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Lưu</button>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Họ tên</th>
+        <th>Email</th>
+        <th>Nội dung phản hồi</th>
+        <th>Ngày gửi yêu cầu</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var feedback in Model)
+    {
+        <tr>
+            <td>@feedback.Name</td>
+            <td>@feedback.Email</td>
+            <td>@feedback.Message</td>
+            <td>@feedback.CreatedAt</td>
+            <td>@feedback.Status</td>
+            <td>
+                <a asp-action="FeedbackDetails" asp-route-id="@feedback.Id" class="btn btn-primary">Xem chi tiết</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

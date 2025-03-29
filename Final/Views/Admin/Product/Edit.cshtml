@@ -1,0 +1,145 @@
+﻿@model Final.Models.Product
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Sửa Thông Tin Sản Phẩm</h2>
+
+    <form asp-action="Edit" method="post" onsubmit="return validateForm();">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Tên sản phẩm</label>
+                    <input asp-for="Name" class="form-control" required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label">Giá (VND)</label>
+                    <input asp-for="Price" id="priceInput" class="form-control" type="text" required />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                    <span id="priceError" class="text-danger" style="display:none;">Giá sản phẩm không hợp lệ</span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DiscountPrice" class="form-label">Giá khuyến mãi (VND)</label>
+                    <input asp-for="DiscountPrice" id="discountPriceInput" class="form-control" type="text" />
+                    <span asp-validation-for="DiscountPrice" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Stock" class="form-label">Số lượng</label>
+                    <input asp-for="Stock" class="form-control" type="number" min="1" max="100" required />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TotalStock" class="form-label">Tổng số lượng</label>
+                    <input asp-for="TotalStock" class="form-control" type="number" required />
+                    <span asp-validation-for="TotalStock" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div asp-action="Create" enctype="multipart/form-data" class="mb-3">
+                    <label for="formFile" class="form-label">Tải lên ảnh sản phẩm</label>
+                    <input class="form-control" type="file" id="formFile" name="Image">
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Mô tả sản phẩm</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Screen" class="form-label">Màn hình</label>
+                    <input asp-for="Screen" class="form-control" required />
+                    <span asp-validation-for="Screen" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="OS" class="form-label">Hãng sản xuất</label>
+                    <input asp-for="OS" class="form-control" required />
+                    <span asp-validation-for="OS" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Camera" class="form-label">Camera</label>
+                    <input asp-for="Camera" class="form-control" required />
+                    <span asp-validation-for="Camera" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RAM" class="form-label">RAM</label>
+                    <input asp-for="RAM" class="form-control" required />
+                    <span asp-validation-for="RAM" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Storage" class="form-label">Bộ nhớ trong</label>
+                    <input asp-for="Storage" class="form-control" required />
+                    <span asp-validation-for="Storage" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Warranty" class="form-label">Thời gian bảo hành</label>
+                    <input asp-for="Warranty" class="form-control" required />
+                    <span asp-validation-for="Warranty" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary me-2">Lưu</button>
+            <a href="/Admin" class="btn btn-secondary">Hủy bỏ</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        formatPriceInput(document.getElementById("priceInput"));
+        formatPriceInput(document.getElementById("discountPriceInput"));
+    });
+
+    function formatPriceInput(input) {
+        if (!input) return;
+        if (input.value) {
+            let rawValue = input.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải là số
+            if (rawValue) {
+                input.value = new Intl.NumberFormat("vi-VN").format(rawValue);
+            }
+        }
+        input.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải là số
+            e.target.value = value ? new Intl.NumberFormat("vi-VN").format(value) : "";
+        });
+    }
+
+    function validateForm() {
+        let priceInput = document.getElementById("priceInput");
+        let discountPriceInput = document.getElementById("discountPriceInput");
+        let priceError = document.getElementById("priceError");
+
+        let rawPrice = priceInput.value.replace(/\D/g, ""); // Loại bỏ ký tự không phải số
+        let rawDiscount = discountPriceInput.value.replace(/\D/g, "");
+
+        if (!rawPrice || parseInt(rawPrice) <= 0) {
+            priceError.innerText = "Giá sản phẩm không hợp lệ!";
+            priceError.style.display = "block";
+            return false;
+        }
+
+        if (rawDiscount && parseInt(rawDiscount) >= parseInt(rawPrice)) {
+            alert("Giá khuyến mãi phải nhỏ hơn giá gốc!");
+            return false;
+        }
+
+        priceError.style.display = "none";
+        priceInput.value = rawPrice;
+        discountPriceInput.value = rawDiscount;
+
+        return true;
+    }
+</script>

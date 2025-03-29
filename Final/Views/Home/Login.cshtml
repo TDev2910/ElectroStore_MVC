@@ -1,0 +1,55 @@
+﻿@model Final.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<section class="vh-100 d-flex justify-content-center align-items-center" style="background-color: white;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+                <div class="card shadow-lg p-4 border-0 rounded-4 bg-white">
+                    <div class="text-center">
+                        <div class="d-inline-block bg-dark text-white rounded-circle p-3 mb-3">
+                            <strong>FKT</strong>
+                        </div>
+                        <h5 class="mt-3">Mohamed FKT</h5>
+                        <h4 class="fw-bold mt-3">Đăng nhập vào tài khoản</h4>
+                        <br />
+                    </div>
+
+                    <form asp-action="Login" asp-controller="Home" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="UserNameOrEmail" class="form-control form-control-lg" autocomplete="email" aria-required="true" placeholder="Email hoặc Tên người dùng" />
+                            <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input asp-for="Password" class="form-control form-control-lg" type="password" autocomplete="current-password" aria-required="true" placeholder="Mật khẩu" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="pt-1 mb-4 text-center">
+                            <button type="submit" class="btn btn-dark btn-lg rounded-pill">Đăng nhập</button>
+                        </div>
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <a class="small text-muted" asp-controller="Home" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                        </div>
+
+                        <div class="d-flex justify-content-center mb-3">
+                            <p class="mb-0">Chưa có tài khoản? <a href="/Home/Register" class="small text-muted">Đăng ký ở đây</a></p>
+                        </div>
+
+                        <!-- Nút đăng nhập với Google -->
+                        <div class="d-flex justify-content-center mb-3">
+                            <a class="btn btn-danger" href="@Url.Action("ExternalLogin", "Home", new { provider = "Google" })">Đăng nhập với Google</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

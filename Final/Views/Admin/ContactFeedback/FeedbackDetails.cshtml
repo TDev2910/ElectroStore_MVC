@@ -1,0 +1,16 @@
+﻿@model Final.Models.UserFeedback
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2>Chi tiết phản hồi</h2>
+
+
+<div>
+    <h4>Phản hồi từ: @Model.Name</h4>
+    <p>Email: @Model.Email</p>
+    <p>Nội dung: @Model.Message</p>
+    <p>Ngày gửi yêu cầu: @Model.CreatedAt</p>
+</div>
+

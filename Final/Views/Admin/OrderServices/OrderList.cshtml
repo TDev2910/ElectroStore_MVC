@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Final.Models.Order>
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+}
+
+<h3>Danh sách đơn hàng</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex gap-2">
+        <input type="text" id="searchTerm" placeholder="Tìm kiếm theo email" class="form-control" style="width: 250px;" />
+        <button onclick="searchOrders()" class="btn btn-secondary">Tìm kiếm</button>
+    </div>
+    <button class="btn btn-primary" onclick="document.getElementById('updateStatusForm').style.display='block'">Cập nhật trạng thái</button>
+</div>
+
+<!-- Di chuyển phần trạng thái xuống dưới tìm kiếm -->
+<div class="d-flex justify-content-start align-items-center mb-3">
+    <select id="statusFilter" onchange="filterOrdersByStatus()" class="form-control" style="width: 200px;">
+        <option value="">Tất cả trạng thái</option>
+        <option value="Chờ xử lý">Chờ xử lý</option>
+        <option value="Đang xử lý">Đang xử lý</option>
+        <option value="Đã thanh toán">Đã thanh toán</option>
+        <option value="Đã giao hàng">Đã giao hàng</option>
+        <option value="Đã nhận hàng">Đã nhận hàng</option>
+        <option value="Đã hủy">Đã hủy</option>
+    </select>
+</div>
+
+<div id="updateStatusForm" style="display:none;">
+    <form asp-action="UpdateOrderStatus" method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label for="OrderId">Mã đơn hàng</label>
+            <select id="OrderId" name="OrderId" class="form-control">
+                @foreach (var order in Model)
+                {
+                    <option value="@order.Id">@order.Id</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Status">Trạng thái đơn hàng</label>
+            <select id="Status" name="Status" class="form-control">
+                <option value="Chờ xử lý">Chờ xử lý</option>
+                <option value="Đang xử lý">Đang xử lý</option>
+                <option value="Đã thanh toán">Đã thanh toán</option>
+                <option value="Đã giao hàng">Đã giao hàng</option>
+                <option value="Đã nhận hàng">Đã nhận hàng</option>
+                <option value="Đã hủy">Đã hủy</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Lưu</button>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Mã đơn hàng</th>
+        <th>Họ</th>
+        <th>Tên</th>
+        <th>Số điện thoại</th>
+        <th>Email</th>
+        <th>Địa chỉ</th>
+        <th>Phương thức vận chuyển</th>
+        <th>Tổng giá trị</th>
+        <th>Ngày đặt hàng</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody id="orderTableBody">
+    @foreach (var order in Model)
+    {
+        <tr>
+            <td>@order.Id</td>
+            <td>@order.FirstName</td>
+            <td>@order.LastName</td>
+            <td>@order.Phone</td>
+            <td>@order.Email</td>
+            <td>@order.Address</td>
+            <td>@order.ShippingMethod</td>
+            <td>@order.TotalPrice</td>
+            <td>@order.OrderDate</td>
+            <td>@order.Status</td>
+            <td>
+                <a class="btn btn-info" href="@Url.Action("OrderDetails", "Admin", new { orderId = order.Id })">Xem chi tiết</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function searchOrders() {
+            var searchTerm = document.getElementById("searchTerm").value.toLowerCase();
+            var rows = document.querySelectorAll("#orderTableBody tr");
+            rows.forEach(row => {
+                var email = row.querySelector("td:nth-child(5)").innerText.toLowerCase();
+                if (email.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function filterOrdersByStatus() {
+            var statusFilter = document.getElementById("statusFilter").value;
+            var rows = document.querySelectorAll("#orderTableBody tr");
+            rows.forEach(row => {
+                var status = row.querySelector("td:nth-child(10)").innerText;
+                if (statusFilter === "" || status === statusFilter) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+}

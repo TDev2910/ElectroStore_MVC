@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Final.Controllers.UserViewModel>
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="get" asp-action="UserList" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="searchQuery" class="form-control" placeholder="Tìm kiếm người dùng theo username" />
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@(user.IsActive ? "Đang hoạt động" : "Không hoạt động")</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Xác nhận mã OTP";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4 text-center" style="width: 350px;">
+        <div class="text-center mb-3">
+            <div class="rounded-circle bg-dark text-white d-inline-flex justify-content-center align-items-center"
+                 style="width: 60px; height: 60px; font-size: 20px; font-weight: bold;">
+                FKT
+            </div>
+            <h4 class="mt-2">Mohamed FKT</h4>
+        </div>
+
+        <h5 class="text-center">Nhập mã OTP</h5>
+        <p class="text-center text-muted">
+            Mã OTP có hiệu lực trong <span id="timer" class="text-danger fw-bold">60</span> giây.
+        </p>
+
+        <form method="post" asp-action="VerifyResetCodePost" id="otpForm">
+            <div class="d-flex justify-content-center gap-2">
+                <input type="text" name="code1" id="otp-1" maxlength="1" required class="form-control text-center fw-bold otp-input" oninput="moveToNext(this, 1)" />
+                <input type="text" name="code2" id="otp-2" maxlength="1" required class="form-control text-center fw-bold otp-input" oninput="moveToNext(this, 2)" />
+                <input type="text" name="code3" id="otp-3" maxlength="1" required class="form-control text-center fw-bold otp-input" oninput="moveToNext(this, 3)" />
+                <input type="text" name="code4" id="otp-4" maxlength="1" required class="form-control text-center fw-bold otp-input" oninput="moveToNext(this, 4)" />
+                <input type="text" name="code5" id="otp-5" maxlength="1" required class="form-control text-center fw-bold otp-input" oninput="moveToNext(this, 5)" />
+                <input type="text" name="code6" id="otp-6" maxlength="1" required class="form-control text-center fw-bold otp-input" oninput="moveToNext(this, 6)" />
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-dark w-100" id="verifyBtn">Xác nhận</button>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.Error)) 
+            {
+                <div class="alert alert-danger mt-3">
+                    @ViewBag.Error
+                </div>
+            }
+        </form>
+
+        <div class="text-center mt-3">
+            <button class="btn btn-outline-secondary w-100" id="resendBtn" disabled onclick="resendOTP()">Gửi lại mã OTP</button>
+        </div>
+
+        <p id="otpMessage" class="text-success text-center mt-2"></p>
+    </div>
+</div>
+
+<script>
+    let timer = 60;
+    let timerInterval = setInterval(() => {
+        if (timer > 0) {
+            timer--;
+            document.getElementById("timer").innerText = timer;
+        } else {
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "Hết hiệu lực!";
+            document.getElementById("verifyBtn").disabled = true;
+            document.getElementById("resendBtn").disabled = false;
+        }
+    }, 1000);
+
+    function moveToNext(currentInput, index) {
+        let nextInput = document.getElementById("otp-" + (index + 1));
+        if (currentInput.value.length === 1 && nextInput) {
+            nextInput.focus();
+        }
+    }
+
+        function resendOTP() {
+        document.getElementById("resendBtn").disabled = true;
+        document.getElementById("otpMessage").innerText = "Đang gửi mã OTP mới...";
+
+        fetch("@Url.Action("ResendOTP", "Home")", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("otpMessage").innerText = data.message;
+                document.getElementById("timer").innerText = "60";
+                document.getElementById("verifyBtn").disabled = false;
+                startTimer(); // Bắt đầu lại bộ đếm thời gian
+            } else {
+                document.getElementById("otpMessage").innerText = "Lỗi: " + data.message;
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("otpMessage").innerText = "Lỗi: Không thể gửi mã OTP.";
+        });
+    }
+
+    function startTimer() {
+        let timer = 60;
+        document.getElementById("timer").innerText = timer;
+        document.getElementById("resendBtn").disabled = true;
+
+        let timerInterval = setInterval(() => {
+            if (timer > 0) {
+                timer--;
+                document.getElementById("timer").innerText = timer;
+            } else {
+                clearInterval(timerInterval);
+                document.getElementById("timer").innerText = "Hết hiệu lực!";
+                document.getElementById("verifyBtn").disabled = true;
+                document.getElementById("resendBtn").disabled = false;
+            }
+        }, 1000);
+    }
+</script>

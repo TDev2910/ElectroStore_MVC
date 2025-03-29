@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Tài khoản";
+}
+
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h2>Tài khoản</h2>
+<ul class="list-group">
+    <li class="list-group-item"><a asp-controller="User" asp-action="ChangePassword">Đổi mật khẩu</a></li>
+    <li class="list-group-item"><a asp-controller="User" asp-action="Orders">Xem đơn hàng</a></li>
+    <li class="list-group-item"><a asp-controller="User" asp-action="UpdateProfile">Cập nhật thông tin</a></li>
+</ul>

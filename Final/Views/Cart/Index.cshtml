@@ -1,0 +1,79 @@
+﻿@model Final.Models.Cart
+
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<h2 style="text-align: center;">🛒 Giỏ hàng của bạn</h2>
+
+@if (!Model.Items.Any())
+{
+    <p style="text-align: center; font-size: 18px; color: gray;">🛍 Giỏ hàng trống.</p>
+}
+else
+{
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="border-bottom: 2px solid #ddd; background-color: #f8f9fa;">
+                <th style="padding: 15px;">Sản phẩm</th>
+                <th style="padding: 15px; text-align: center;">Hình ảnh</th>
+                <th style="padding: 15px;">Giá</th>
+                <th style="padding: 15px; text-align: center;">Số lượng</th>
+                <th style="padding: 15px;">Thành tiền</th>
+                <th style="padding: 15px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 15px;">@item.Product.Name</td>
+
+                    <!-- Hiển thị hình ảnh sản phẩm -->
+                    <td style="padding: 15px; text-align: center;">
+                        <img src="~/img/@item.Product.Image" alt="@item.Product.Name" class="img-thumbnail" style="max-width: 150px; border-radius: 5px;" />
+                    </td>
+
+                    <td style="padding: 15px; font-weight: bold; color: #d9534f;">@item.Product.Price.ToString("N0") đ</td>
+
+                    <!-- Cột số lượng với nút tăng giảm -->
+                    <td style="padding: 15px; text-align: center;">
+                        <form method="post" action="/Cart/DecreaseQuantity" style="display: inline;">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" style="padding: 5px 10px; background-color: #ddd; border: none; cursor: pointer; border-radius: 5px;">−</button>
+                        </form>
+
+                        <span style="margin: 0 15px; font-size: 18px; font-weight: bold;">@item.Quantity</span>
+
+                        <form method="post" action="/Cart/IncreaseQuantity" style="display: inline;">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" style="padding: 5px 10px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px;">+</button>
+                        </form>
+                    </td>
+
+                    <td style="padding: 15px; font-weight: bold;">@((item.Product.Price * item.Quantity).ToString("N0")) đ</td>
+
+                    <!-- Nút Xóa sản phẩm -->
+                    <td style="padding: 15px;">
+                        <form method="post" action="/Cart/RemoveItem">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" style="padding: 8px 12px; background-color: red; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                                 Xóa
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Tổng tiền -->
+    <h3 style="text-align: right; margin-top: 20px; color: #5a5a5a;">Tổng tiền: <span style="color: #d9534f;">@Model.TotalPrice().ToString("N0") đ</span></h3>
+
+    <!-- Nút Thanh toán -->
+    <form method="post" action="/Cart/Checkout" style="text-align: right; margin-top: 20px;">
+        <button type="submit" style="padding: 12px 20px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; font-size: 18px;">
+            🛍 Thanh toán ngay
+        </button>
+    </form>
+}

@@ -1,0 +1,32 @@
+﻿@model Final.Models.Product
+
+<div class="container mt-5">
+    <h2 class="text-center">@Model.Name</h2>
+
+    <!-- Hình ảnh sản phẩm -->
+    <div class="d-flex justify-content-center mt-3">
+        <img src="@Model.Image" alt="@Model.Name" class="img-fluid rounded shadow-lg" style="max-width: 350px;" />
+    </div>
+
+    <!-- Bảng thông tin chi tiết sản phẩm -->
+    <table class="table table-bordered mt-4">
+        <tbody>
+            <tr><th>💰 Giá bán</th><td>@string.Format("{0:0,0} đ", Model.Price)</td></tr>
+            <tr><th>📦 Số lượng còn</th><td>@Model.Stock</td></tr>
+            <tr><th>📊 Tổng số lượng</th><td>@Model.TotalStock</td></tr>
+            <tr><th>📝 Mô tả</th><td>@Model.Description</td></tr>
+            <tr><th>🖥 Màn hình</th><td>@Model.Screen</td></tr>
+            <tr><th>⚙ Hệ điều hành</th><td>@Model.OS</td></tr>
+            <tr><th>📷 Camera</th><td>@Model.Camera</td></tr>
+            <tr><th>🔋 RAM</th><td>@Model.RAM</td></tr>
+            <tr><th>💾 Bộ nhớ trong</th><td>@Model.Storage</td></tr>
+            <tr><th>⏳ Bảo hành</th><td>@Model.Warranty</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Nút điều hướng -->
+    <div class="d-flex justify-content-center mt-4">
+        <a asp-action="Index" class="btn btn-secondary me-3">⬅ Quay lại</a>
+        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">✏ Chỉnh sửa</a>
+    </div>
+</div>

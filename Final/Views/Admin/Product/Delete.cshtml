@@ -1,0 +1,40 @@
+﻿@model Final.Models.Product
+
+<div class="container mt-4">
+    <h2 class="text-center text-danger">Xóa Sản Phẩm</h2>
+    <p class="text-center text-muted">Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.</p>
+
+    <div class="card mx-auto shadow-sm" style="max-width: 500px;">
+        <div class="card-body text-center">
+            <img src="@Model.Image" alt="@Model.Name" class="img-fluid rounded mb-3" style="max-height: 200px; object-fit: contain;">
+            <h4 class="card-title">@Model.Name</h4>
+            <p class="card-text text-danger fw-bold">
+                @if (Model.DiscountPrice.HasValue && Model.DiscountPrice < Model.Price)
+                {
+                    <span class="text-decoration-line-through text-muted">@string.Format("{0:0,0} ₫", Model.Price)</span>
+                    <span class="text-danger ms-2">@string.Format("{0:0,0} ₫", Model.DiscountPrice)</span>
+                }
+                else
+                {
+                    <span>@string.Format("{0:0,0} ₫", Model.Price)</span>
+                }
+            </p>
+            <p class="card-text">@Model.Description</p>
+
+            <!-- Form Xóa -->
+            <form asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="submit" class="btn btn-danger me-2">Xóa</button>
+                    <a href="/Admin" class="btn btn-secondary">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

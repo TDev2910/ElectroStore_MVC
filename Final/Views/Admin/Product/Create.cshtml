@@ -1,0 +1,126 @@
+﻿@model Final.Models.Product
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Thêm Thông Tin Sản Phẩm</h2>
+
+    <form asp-controller="Admin" asp-action="Create" method="post" onsubmit="return validateForm();">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Tên sản phẩm</label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label">Giá (VND)</label>
+                    <input asp-for="Price" id="priceInput" class="form-control" type="text" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DiscountPrice" class="form-label">Giá khuyến mãi (VND)</label>
+                    <input asp-for="DiscountPrice" id="discountPriceInput" class="form-control" type="text" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Stock" class="form-label">Số lượng</label>
+                    <input asp-for="Stock" class="form-control" type="number" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TotalStock" class="form-label">Tổng số lượng</label>
+                    <input asp-for="TotalStock" class="form-control" type="number" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div asp-action="Create" enctype="multipart/form-data" class="mb-3">
+                    <label for="formFile" class="form-label">Tải lên ảnh sản phẩm</label>
+                    <input class="form-control" type="file" id="formFile" name="Image">
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Mô tả sản phẩm</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Screen" class="form-label">Màn hình</label>
+                    <input asp-for="Screen" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="OS" class="form-label">Hãng sản xuất</label>
+                    <input asp-for="OS" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Camera" class="form-label">Camera</label>
+                    <input asp-for="Camera" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RAM" class="form-label">RAM</label>
+                    <input asp-for="RAM" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Storage" class="form-label">Bộ nhớ trong</label>
+                    <input asp-for="Storage" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Warranty" class="form-label">Thời gian bảo hành</label>
+                    <input asp-for="Warranty" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary me-2">Lưu</button>
+            <a href="/Admin" class="btn btn-secondary">Hủy bỏ</a>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        formatPriceInput(document.getElementById("priceInput"));
+        formatPriceInput(document.getElementById("discountPriceInput"));
+    });
+
+    function formatPriceInput(input) {
+        if (!input) return;
+        input.addEventListener("input", function (e) {
+            let rawValue = e.target.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải là số
+            e.target.value = rawValue ? new Intl.NumberFormat("vi-VN").format(rawValue) : "";
+        });
+    }
+
+    function validateForm() {
+        let priceInput = document.getElementById("priceInput");
+        let discountPriceInput = document.getElementById("discountPriceInput");
+        let priceError = document.getElementById("priceError");
+
+        // Loại bỏ tất cả ký tự không phải là số
+        let rawPrice = priceInput.value.replace(/\D/g, "");
+        let rawDiscount = discountPriceInput.value.replace(/\D/g, "");
+
+        if (!rawPrice || parseInt(rawPrice) <= 0) {
+            priceError.innerText = "Giá sản phẩm không hợp lệ!";
+            priceError.style.display = "block";
+            return false;
+        }
+
+        if (rawDiscount && parseInt(rawDiscount) >= parseInt(rawPrice)) {
+            alert("Giá khuyến mãi phải nhỏ hơn giá gốc!");
+            return false;
+        }
+
+        priceError.style.display = "none";
+        priceInput.value = rawPrice;
+        discountPriceInput.value = rawDiscount;
+
+        return true;
+    }
+</script>

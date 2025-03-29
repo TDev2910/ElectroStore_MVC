@@ -1,0 +1,25 @@
+﻿@model Final.Models.Order
+
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<h2 class="text-success">🎉 Đơn hàng đã được đặt thành công!</h2>
+<p class="text-muted">Cảm ơn bạn đã mua hàng. Chúng tôi sẽ xác nhận đơn hàng sớm nhất có thể.</p>
+
+<h5 class="fw-bold">📝 Chi tiết đơn hàng:</h5>
+<ul class="list-group">
+    @foreach (var item in Model.OrderItems)
+    {
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Sản phẩm ID: @item.ProductId - Số lượng: @item.Quantity</span>
+            <span>@string.Format("{0:N0} đ", item.Price * item.Quantity)</span>
+        </li>
+    }
+</ul>
+
+<h4 class="mt-4 text-danger fw-bold">💰 Tổng cộng: @string.Format("{0:N0} đ", Model.TotalPrice)</h4>
+
+<p><strong>Trạng thái đơn hàng:</strong> @Model.Status</p>
+
+<a href="@Url.Action("Product", "User")" class="btn btn-primary mt-4">Tiếp tục mua sắm</a>

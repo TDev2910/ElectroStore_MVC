@@ -1,0 +1,44 @@
+﻿@model PaymentInformationModel
+
+<div class="table-responsive">
+    <form asp-action="CreatePaymentUrl" id="frmCreateOrder" method="POST">
+        <div class="form-group">
+            <label for="ordertype">Loại hàng hóa </label>
+            <select name="OrderType" id="ordertype" class="form-control">
+                <option value="electric">Đồ điện tử</option>
+                <option value="fashion">Thời trang</option>
+                <option value="other">Khác</option>
+            </select>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="Name">Tên khách hàng</label>
+            <input class="form-control"
+                   id="Name"
+                   name="Name"
+                   type="text" 
+                   value="@Model.Name">
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="Amount">Số tiền</label>
+            <input class="form-control"
+                   id="Amount"
+                   name="Amount"
+                   type="text"
+                   value="@(Model.Amount)">
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="OrderDescription">Nội dung thanh toán</label>
+            <textarea class="form-control"
+                      cols="20"
+                      id="OrderDescription"
+                      name="OrderDescription"
+                      value="@Model.OrderDescription"
+                      rows="2"></textarea>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Thanh toán</button>
+    </form>
+</div>

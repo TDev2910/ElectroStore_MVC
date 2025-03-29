@@ -1,0 +1,71 @@
+﻿@model Final.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<section class="vh-100 d-flex justify-content-center align-items-center" style="background-color: white;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+                <div class="card shadow-lg p-3 border-0 rounded-4 bg-white" style="max-width: 380px; width: 100%;">
+                    <div class="text-center">
+                        <div class="d-inline-block bg-dark text-white rounded-circle p-3 mb-3">
+                            <strong>FKT</strong>
+                        </div>
+                        <h5 class="mt-2">Mohamed FKT</h5>
+                        <h4 class="fw-bold mt-2">Tạo tài khoản mới</h4>
+                        <br>
+                    </div>
+
+                    <form id="registerForm" asp-action="Register" asp-controller="Home" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- Tên người dùng -->
+                        <div class="form-outline mb-4">
+                            <input asp-for="UserName" class="form-control form-control-lg" aria-required="true" placeholder="Tên người dùng" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Họ và tên -->
+                        <div class="form-outline mb-4">
+                            <input asp-for="FullName" class="form-control form-control-lg" aria-required="true" placeholder="Họ và tên" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-outline mb-4">
+                            <input asp-for="Email" class="form-control form-control-lg" autocomplete="username" aria-required="true" placeholder="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Mật khẩu -->
+                        <div class="form-outline mb-4">
+                            <input asp-for="Password" class="form-control form-control-lg" type="password" autocomplete="new-password" aria-required="true" placeholder="Mật khẩu" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <!-- Xác nhận mật khẩu -->
+                        <div class="form-outline mb-4">
+                            <input asp-for="ConfirmPassword" class="form-control form-control-lg" type="password" autocomplete="new-password" aria-required="true" placeholder="Xác nhận mật khẩu" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <!-- Điều khoản -->
+                        <div class="form-check d-flex justify-content-start mb-4">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                            <label class="form-check-label" for="form2Example3">
+                                Tôi đồng ý với tất cả các điều khoản <a href="#!">Điều khoản dịch vụ</a>
+                            </label>
+                        </div>
+
+                        <!-- Đăng ký -->
+                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                            <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill">Đăng ký</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

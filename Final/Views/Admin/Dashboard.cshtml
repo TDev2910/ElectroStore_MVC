@@ -1,0 +1,113 @@
+﻿@model Final.ViewModels.DashboardViewModel
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2 class="text-center mt-4">Xin chào Admin</h2>
+<p class="text-center">Đây là trang quản lý dành riêng cho Admin.</p>
+
+<div class="container mt-4">
+    <!-- Card Statistics -->
+    <div class="row">
+        <!-- Card 1: Total Products -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg text-center">
+                <div class="card-body">
+                    <h4>Tổng sản phẩm</h4>
+                    <p class="h5">@Model.TotalProducts</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Total Orders -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg text-center">
+                <div class="card-body">
+                    <h4>Tổng đơn hàng</h4>
+                    <p class="h5">@Model.TotalOrders</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Revenue -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg text-center">
+                <div class="card-body">
+                    <h4>Doanh thu</h4>
+                    <p class="h5">@Model.TotalRevenue.ToString("C")</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Total Users -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-lg text-center">
+                <div class="card-body">
+                    <h4>Tổng người dùng</h4>
+                    <p class="h5">@Model.TotalUsers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <!-- Chart 1: Website Views -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title">Lượt truy cập website</h5>
+                    <canvas id="websiteViewsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 2: Sales Performance -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title">Thống kê sản phẩm bán chạy</h5>
+                    <canvas id="mostPurchasedProductsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Website Views Chart
+        var ctx1 = document.getElementById('websiteViewsChart').getContext('2d');
+        var websiteViewsChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'],
+                datasets: [{
+                    label: 'Website Views (%)',
+                    data: @Html.Raw(Json.Serialize(Model.WebsiteViews)),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // Most Purchased Products Chart
+        var ctx2 = document.getElementById('mostPurchasedProductsChart').getContext('2d');
+        var mostPurchasedProductsChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.MostPurchasedProducts.Select(p => p.ProductName))),
+                datasets: [{
+                    label: 'Quantity',
+                    data: @Html.Raw(Json.Serialize(Model.MostPurchasedProducts.Select(p => p.Quantity))),
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+}
