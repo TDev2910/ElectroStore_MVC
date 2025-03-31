@@ -17,68 +17,72 @@
     <div class="row">
         <!-- Cột bên trái -->
         <div class="col-md-7">
-            <h5 class="fw-bold">GIAO HÀNG ĐẾN</h5>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="fw-bold">GIAO HÀNG ĐẾN</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="LastName">Họ *</label>
+                        <input type="text" asp-for="LastName" class="form-control" required />
+                    </div>
 
-            <div class="form-group">
-                <label for="LastName">Họ *</label>
-                <input type="text" asp-for="LastName" class="form-control" required />
+                    <div class="form-group">
+                        <label for="FirstName">Tên *</label>
+                        <input type="text" asp-for="FirstName" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Phone">Số điện thoại *</label>
+                        <input type="text" asp-for="Phone" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Email">Email *</label>
+                        <input type="email" asp-for="Email" class="form-control" required />
+                    </div>
+
+                    <h5 class="fw-bold mt-4">PHƯƠNG THỨC VẬN CHUYỂN</h5>
+                    <div class="form-group">
+                        <select asp-for="ShippingMethod" class="form-control" id="shippingMethod" required>
+                            <option value="Giao hàng tận nơi">Giao hàng tận nơi</option>
+                            <option value="Hẹn lấy tại cửa hàng">Hẹn lấy tại cửa hàng</option>
+                        </select>
+                    </div>
+
+                    <div id="addressContainer" class="form-group">
+                        <label for="Address">Địa chỉ *</label>
+                        <input type="text" asp-for="Address" class="form-control" required />
+                    </div>
+
+                    <div id="storeContainer" class="form-group" style="display: none;">
+                        <label for="City">Tỉnh thành *</label>
+                        <select id="citySelect" asp-for="City" class="form-control" onchange="updateStoreOptions()">
+                            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                            <option value="Hà Nội">Hà Nội</option>
+                            <option value="Vũng Tàu">Vũng Tàu</option>
+                        </select>
+
+                        <label for="Store">Cửa hàng *</label>
+                        <select id="storeSelect" asp-for="Store" class="form-control">
+                            <!-- Các cửa hàng sẽ được cập nhật từ JavaScript -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Notes">Ghi chú</label>
+                        <textarea asp-for="Notes" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="PaymentMethod">Phương thức thanh toán</label>
+                        <select asp-for="PaymentMethod" class="form-control" required>
+                            <option value="COD">Thanh toán khi nhận hàng</option>
+                            <option value="VNPAY">Thanh toán VNPAY</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="FirstName">Tên *</label>
-                <input type="text" asp-for="FirstName" class="form-control" required />
-            </div>
-
-            <div class="form-group">
-                <label for="Phone">Số điện thoại *</label>
-                <input type="text" asp-for="Phone" class="form-control" required />
-            </div>
-
-             <div class="form-group"> 
-                 <label for="Email">Email *</label> 
-                 <input type="email" asp-for="Email" class="form-control" required /> 
-             </div> 
-
-            <h5 class="fw-bold mt-4">PHƯƠNG THỨC VẬN CHUYỂN</h5>
-            <div class="form-group">
-                <select asp-for="ShippingMethod" class="form-control" id="shippingMethod" required>
-                    <option value="Giao hàng tận nơi">Giao hàng tận nơi</option>
-                    <option value="Hẹn lấy tại cửa hàng">Hẹn lấy tại cửa hàng</option>
-                </select>
-            </div>
-
-            <div id="addressContainer" class="form-group">
-                <label for="Address">Địa chỉ *</label>
-                <input type="text" asp-for="Address" class="form-control" required />
-            </div>
-
-            <div id="storeContainer" class="form-group" style="display: none;">
-                <label for="City">Tỉnh thành *</label>
-                <select id="citySelect" asp-for="City" class="form-control" onchange="updateStoreOptions()">
-                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                    <option value="Hà Nội">Hà Nội</option>
-                    <option value="Vũng Tàu">Vũng Tàu</option>
-                </select>
-
-                <label for="Store">Cửa hàng *</label>
-                <select id="storeSelect" asp-for="Store" class="form-control">
-                    <!-- Các cửa hàng sẽ được cập nhật từ JavaScript -->
-                </select>
-            </div>
-
-
-            <div class="form-group">
-                <label for="Notes">Ghi chú</label>
-                <textarea asp-for="Notes" class="form-control"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="PaymentMethod">Phương thức thanh toán</label>
-                <select asp-for="PaymentMethod" class="form-control" required>
-                    <option value="COD">Thanh toán khi nhận hàng</option>
-                    <option value="VNPAY">Thanh toán VNPAY</option>
-                </select>
-            </div>         
             <button type="submit" class="btn btn-success mt-3">Xác nhận đơn hàng</button>
         </div>
 
@@ -88,25 +92,25 @@
                 <h5 class="fw-bold">CHI TIẾT ĐƠN HÀNG</h5>
                 @if (Model.CartItems != null && Model.CartItems.Any())
                 {
-                    <table class="table">
+                    <table class="table table-striped table-hover">
                         <thead>
-                            <tr>
-                                <th>Tên sản phẩm</th>
-                                <th>Số lượng</th>
-                                <th>Giá</th>
-                                <th>Tổng</th>
-                            </tr>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.CartItems)
-                            {
-                                <tr>
-                                    <td>@item.Product.Name</td>
-                                    <td>@item.Quantity</td>
-                                    <td>@string.Format("{0:N0} đ", item.Price)</td>
-                                    <td>@string.Format("{0:N0} đ", item.Price * item.Quantity)</td>
-                                </tr>
-                            }
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Quantity</td>
+                                <td>@string.Format("{0:N0} đ", item.Price)</td>
+                                <td>@string.Format("{0:N0} đ", item.Price * item.Quantity)</td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 }

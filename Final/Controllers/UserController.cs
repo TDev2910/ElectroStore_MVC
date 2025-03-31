@@ -112,22 +112,27 @@ namespace Final.Controllers
         // Xem đơn hàng
         public async Task<IActionResult> Orders()
         {
-            var userEmail = User.Identity.Name;
-            if (string.IsNullOrEmpty(userEmail))
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
+            var userEmail = user.Email; // Lấy email từ AspNetUsers
             var orders = await _context.Orders
                 .Where(o => o.Email.ToLower() == userEmail.ToLower())
-                .Include(o => o.OrderItems) // Include order items
-                .ThenInclude(oi => oi.Product) // Include product details
-                .OrderByDescending(o => o.OrderDate) // Sort by date, newest first
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
             if (orders == null || !orders.Any())
             {
                 ViewData["Message"] = "Bạn chưa có đơn hàng nào.";
+            }
+            else
+            {
+                ViewData["Message"] = null;
             }
 
             return View(orders);
@@ -198,6 +203,36 @@ namespace Final.Controllers
             }
 
             return View(model);
+        }
+        
+        public async Task<IActionResult> RequestCancelOrder(int orderId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId && o.Email.ToLower() == user.Email.ToLower());
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            if (order.Status == "Cancelled" || order.Status == "Completed")
+            {
+                TempData["ErrorMessage"] = "Đơn hàng không thể yêu cầu hủy vì đã được xử lý.";
+                return RedirectToAction("Orders");
+            }
+
+            order.Status = "Yêu cầu hủy đơn hàng";
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Yêu cầu hủy đơn hàng đã được gửi.";
+            return RedirectToAction("Orders");
         }
 
         // Hiển thị trang tài khoản

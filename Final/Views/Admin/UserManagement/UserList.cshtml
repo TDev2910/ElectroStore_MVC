@@ -22,7 +22,9 @@
         <tr>
             <th>Username</th>
             <th>Email</th>
+            <th>Số điện thoại</th>
             <th>Trạng thái</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +33,13 @@
             <tr>
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
                 <td>@(user.IsActive ? "Đang hoạt động" : "Không hoạt động")</td>
+                <td>
+                    <form method="post" asp-action="DeleteUser" asp-route-id="@user.UserName" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

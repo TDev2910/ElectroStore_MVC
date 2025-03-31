@@ -4,114 +4,105 @@
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
 
-<div class="container-fluid" style="padding: 0; margin: 0;">
+<div class="container-fluid p-0">
     <div class="banner">
-        <img src="~/img/banner.jpg" alt="Banner" style="width: 100%; height: auto; display: block;">
+        <img src="~/img/banner.jpg" alt="Banner" class="img-fluid">
     </div>
-</div>  
-<div style="display: flex; gap: 20px;">
+</div>
 
-    <!-- Thanh menu bên trái (Lọc sản phẩm và Tìm kiếm) -->
-    <div style="width: 250px; padding: 20px; border-right: 1px solid #ddd; background-color: #f8f9fa; border-radius: 5px;">
-        <h3 style="margin-bottom: 15px;">Lọc Sản Phẩm</h3>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Thanh menu bên trái (Lọc sản phẩm và Tìm kiếm) -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Lọc Sản Phẩm</h3>
 
-        <!-- Tìm kiếm sản phẩm -->
-        <form method="get" action="/User/Product" style="margin-top: 30px;">
-            <div style="margin-bottom: 20px;">
-                <input type="text" name="searchTerm" placeholder="Tìm kiếm sản phẩm..." value="@ViewBag.SearchTerm"
-                       style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-            </div>
+                    <!-- Tìm kiếm sản phẩm -->
+                    <form method="get" action="/User/Product" class="mt-3">
+                        <div class="mb-3">
+                            <input type="text" name="searchTerm" placeholder="Tìm kiếm sản phẩm..." value="@ViewBag.SearchTerm" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Tìm kiếm</button>
+                    </form>
 
-            <button type="submit" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px;">
-                Tìm kiếm
-            </button>
-        </form>
+                    <!-- Form lọc sản phẩm -->
+                    <form method="get" action="/User/Product" class="mt-4">
+                        <div class="mb-3">
+                            <label for="os" class="form-label fw-bold">Hãng sản xuất:</label>
+                            <select name="os" id="os" class="form-select" onchange="this.form.submit()">
+                                <option value="">Tất cả</option>
+                                @foreach (var os in ViewBag.OSOptions)
+                                {
+                                    <option value="@os" selected="@(ViewBag.SelectedOS == os ? "selected" : null)">@os</option>
+                                }
+                            </select>
+                        </div>
 
-        <!-- Form lọc sản phẩm -->
-        <form method="get" action="/User/Product">
-            <div style="margin-bottom: 20px;">
-                <label for="os" style="font-weight: bold; margin-bottom: 10px; display: block;">Hãng sản xuất:</label>
-                <select name="os" id="os" onchange="this.form.submit()"
-                        style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-                    <option value="">Tất cả</option>
-                    @foreach (var os in ViewBag.OSOptions)
-                    {
-                        <option value="@os" selected="@(ViewBag.SelectedOS == os ? "selected" : null)">@os</option>
-                    }
-                </select>
-            </div>
+                        <!-- Lọc theo giá -->
+                        <div class="mb-3">
+                            <h4 class="fw-bold">Lọc theo giá:</h4>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priceRange" value="10-15" onchange="this.form.submit()" @(ViewBag.SelectedPriceRange == "10-15" ? "checked" : "")>
+                                <label class="form-check-label">10 triệu - 15 triệu</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priceRange" value="15-30" onchange="this.form.submit()" @(ViewBag.SelectedPriceRange == "15-30" ? "checked" : "")>
+                                <label class="form-check-label">15 triệu - 30 triệu</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priceRange" value="30-50" onchange="this.form.submit()" @(ViewBag.SelectedPriceRange == "30-50" ? "checked" : "")>
+                                <label class="form-check-label">30 triệu - 50 triệu</label>
+                            </div>
+                        </div>
 
-            <!-- Lọc theo giá -->
-            <div style="margin-bottom: 20px;">
-                <h4 style="margin-bottom: 10px;">Lọc theo giá:</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px; background: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="radio" name="priceRange" value="10-15" onchange="this.form.submit()"
-                        @(ViewBag.SelectedPriceRange == "10-15" ? "checked" : "")>
-                        10 triệu - 15 triệu
-                    </label>
+                        <!-- Nút Lọc -->
+                        <button type="submit" class="btn btn-primary w-100">Lọc</button>
+                    </form>
 
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="radio" name="priceRange" value="15-30" onchange="this.form.submit()"
-                        @(ViewBag.SelectedPriceRange == "15-30" ? "checked" : "")>
-                        15 triệu - 30 triệu
-                    </label>
-
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="radio" name="priceRange" value="30-50" onchange="this.form.submit()"
-                        @(ViewBag.SelectedPriceRange == "30-50" ? "checked" : "")>
-                        30 triệu - 50 triệu
-                    </label>
+                    <!-- Nút Hủy Lọc -->
+                    <form method="get" action="/User/Product" class="mt-2">
+                        <button type="submit" class="btn btn-secondary w-100">Hủy lọc</button>
+                    </form>
                 </div>
             </div>
+        </div>
 
-            <!-- Nút Lọc -->
-            <button type="submit" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; font-size: 16px;">
-                Lọc
-            </button>
-        </form>
-    </div>
-
-    <!-- Danh sách sản phẩm bên phải -->
-    <div style="flex: 1; padding: 20px; display: flex; flex-wrap: wrap; gap: 20px;">
-        @foreach (var product in Model)
-        {
-            <div style="width: 250px; margin: 10px; border: 1px solid #ddd; padding: 10px; text-align: center; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
-                <img src="~/img/@product.Image" alt="@product.Name" class="img-thumbnail" style="max-width: 150px; border-radius: 5px;" />
-                <h3 style="font-size: 16px; margin-top: 10px;">@product.Name</h3>
-
-                <!-- Hiển thị giá sản phẩm -->
-                <div>
-                    @if (product.DiscountPrice.HasValue && product.DiscountPrice < product.Price)
-                    {
-                        <p>
-                            <strong>Giá:</strong>
-                            <span class="text-danger" style="font-size: 18px;">@product.DiscountPrice?.ToString("N0") đ</span>
-                        </p>
-                        <p style="font-size: 14px; text-decoration: line-through; color: #aaa;">
-                            <strong>Giá gốc:</strong>@product.Price.ToString("N0") đ
-                        </p>
-                        <p class="text-success">
-                            Giảm: @product.DiscountPercentage% - Tiết kiệm:
-                            @((product.Price - product.DiscountPrice ?? 0).ToString("N0")) đ
-                        </p>
-                    }
-                    else
-                    {
-                        <p><strong>Giá:</strong> @product.Price.ToString("N0") đ</p>
-                    }
-                </div>
-
-                <p><strong>Hãng sản xuất:</strong> @product.OS</p>
-
-                <!-- Nút Mua Hàng -->
-                <form method="post" action="/Cart/AddToCart">
-                    <input type="hidden" name="productId" value="@product.Id" />
-                    <button type="submit" style="width: 100%; padding: 8px; margin-top: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px;">
-                        Mua hàng
-                    </button>
-                </form>
+        <!-- Danh sách sản phẩm bên phải -->
+        <div class="col-md-9">
+            <div class="row">
+                @foreach (var product in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 text-center">
+                            <img src="~/img/@product.Image" alt="@product.Name" class="card-img-top img-thumbnail mx-auto" style="max-width: 150px;">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.Name</h5>
+                                <div>
+                                    @if (product.DiscountPrice.HasValue && product.DiscountPrice < product.Price)
+                                    {
+                                        <p class="text-danger fw-bold">@product.DiscountPrice?.ToString("N0") đ</p>
+                                        <p class="text-muted text-decoration-line-through">@product.Price.ToString("N0") đ</p>
+                                        <p class="text-success">Giảm: @product.DiscountPercentage% - Tiết kiệm: @((product.Price - product.DiscountPrice ?? 0).ToString("N0")) đ</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="fw-bold">@product.Price.ToString("N0") đ</p>
+                                    }
+                                </div>
+                                <p class="card-text"><strong>Hãng sản xuất:</strong> @product.OS</p>
+                            </div>
+                            <div class="card-footer">
+                                <form method="post" action="/Cart/AddToCart" class="d-inline">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button type="submit" class="btn btn-success w-100 mb-2">Mua hàng</button>
+                                </form>
+                                <a href="/Product/Details/@product.Id" class="btn btn-info w-100">Xem Chi Tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
 </div>

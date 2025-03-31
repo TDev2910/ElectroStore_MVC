@@ -13,9 +13,15 @@
     </div>
 }
 
-<h2>Tài khoản</h2>
-<ul class="list-group">
-    <li class="list-group-item"><a asp-controller="User" asp-action="ChangePassword">Đổi mật khẩu</a></li>
-    <li class="list-group-item"><a asp-controller="User" asp-action="Orders">Xem đơn hàng</a></li>
-    <li class="list-group-item"><a asp-controller="User" asp-action="UpdateProfile">Cập nhật thông tin</a></li>
-</ul>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Tài khoản</h2>
+            <div class="list-group">
+                <a asp-controller="User" asp-action="ChangePassword" class="list-group-item list-group-item-action">Đổi mật khẩu</a>
+                <a asp-controller="User" asp-action="Orders" class="list-group-item list-group-item-action">Xem đơn hàng</a>
+                <a asp-controller="User" asp-action="UpdateProfile" class="list-group-item list-group-item-action">Cập nhật thông tin</a>
+            </div>
+        </div>
+    </div>
+</div>

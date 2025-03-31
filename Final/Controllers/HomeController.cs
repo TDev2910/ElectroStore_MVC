@@ -60,7 +60,7 @@ namespace Final.Controllers
                         var roles = await _userManager.GetRolesAsync(user);
                         if (roles.Contains("Admin"))
                         {
-                            return RedirectToAction("Dashboard", "Admin"); // 👉 Nếu là Admin, điều hướng đến Dashboard Admin
+                            return RedirectToAction("Index", "Admin"); // 👉 Nếu là Admin, điều hướng đến Dashboard Admin
                         }
                         else if (roles.Contains("User"))
                         {

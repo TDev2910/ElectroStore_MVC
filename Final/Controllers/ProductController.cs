@@ -102,7 +102,7 @@ namespace Final.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            return View("~/Views/User/Details.cshtml", product);
         }
     }
 }

@@ -1,18 +1,112 @@
-﻿@model TModel
+﻿@model Final.Models.Order
 
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["Title"] = "Sửa thông tin đơn hàng";
 }
 
-<!DOCTYPE html>
+<h3 class="mb-4">Sửa thông tin đơn hàng</h3>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+<form asp-action="EditOrder" method="post" class="card">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ShippingMethod" class="control-label"></label>
+                    <input asp-for="ShippingMethod" class="form-control" />
+                    <span asp-validation-for="ShippingMethod" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PaymentMethod" class="control-label"></label>
+                    <input asp-for="PaymentMethod" class="form-control" />
+                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TotalPrice" class="control-label"></label>
+                    <input asp-for="TotalPrice" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="TotalPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <select asp-for="Status" class="form-control">
+                        <option value="Chờ xử lý">Chờ xử lý</option>
+                        <option value="Đang xử lý">Đang xử lý</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                        <option value="Đã giao hàng">Đã giao hàng</option>
+                        <option value="Đã nhận hàng">Đã nhận hàng</option>
+                        <option value="Đã hủy">Đã hủy</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <input asp-for="Notes" class="form-control" />
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Store" class="control-label"></label>
+                    <input asp-for="Store" class="form-control" />
+                    <span asp-validation-for="Store" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-right">
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a asp-action="OrderList" class="btn btn-secondary">Quay lại</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -16,8 +16,9 @@ namespace Final.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly EmailService _emailService;
-        private const string SecurityCode = "2910"; // Mã bảo mật mặc định
-
+        private const string SecurityCode = "2910"; // Mã bảo mật mặc định cho chức năng quản lý người dùng 
+        private const string SecurityCodeDashboard = "2002"; //mã bảo mật mặc định cho chức năng dashboard
+        
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, EmailService emailService)
         {
             _context = context;
@@ -199,6 +200,27 @@ namespace Final.Controllers
 
             return RedirectToAction("UserList");
         }
+        
+        // Hiển thị form nhập mã bảo mật cho dashboard
+        public IActionResult EnterSecurityCodeDashboard()
+        {
+            return View("~/Views/Admin/Dashboard/EnterSecurityCodeDashboard.cshtml", new SecurityCodeViewModel());
+        }
+
+        // Xử lý mã bảo mật và hiển thị trang dashboard
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ValidateSecurityCodeDashboard(SecurityCodeViewModel model)
+        {
+            string enteredCode = $"{model.Code1}{model.Code2}{model.Code3}{model.Code4}";
+            if (enteredCode != SecurityCodeDashboard)
+            {
+                TempData["ErrorMessage"] = "Mã code không hợp lệ.";
+                return RedirectToAction("EnterSecurityCodeDashboard");
+            }
+
+            return RedirectToAction("Dashboard");
+        }
 
         // Hiển thị danh sách người dùng
         [HttpGet]
@@ -218,11 +240,36 @@ namespace Final.Controllers
                 {
                     UserName = user.UserName,
                     Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
                     IsActive = IsUserActive(user.UserName)
                 });
             }
 
             return View("~/Views/Admin/UserManagement/UserList.cshtml", userList);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByNameAsync(id);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "Người dùng không tồn tại.";
+                return RedirectToAction("UserList");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Người dùng đã được xóa thành công!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi xóa người dùng.";
+            }
+
+            return RedirectToAction("UserList");
         }
 
         private bool IsUserActive(string userName)
@@ -231,8 +278,6 @@ namespace Final.Controllers
             var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName);
             if (user != null)
             {
-                // Giả sử bạn có một thuộc tính LastActivityDate trong ApplicationUser
-                // return (DateTime.Now - user.LastActivityDate).TotalMinutes < 5;
                 return true; // Giả sử tất cả người dùng đều đang hoạt động
             }
             return false;
@@ -260,6 +305,49 @@ namespace Final.Controllers
                 return NotFound();
             }
             return View("~/Views/Admin/OrderServices/OrderDetails.cshtml", order);
+        }
+        
+        // Hiển thị form sửa đơn hàng
+        public async Task<IActionResult> EditOrder(int id)
+        {
+            var order = await _context.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product).FirstOrDefaultAsync(o => o.Id == id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return View("~/Views/Admin/OrderServices/EditOrder.cshtml", order);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditOrder(Order order)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingOrder = await _context.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product).FirstOrDefaultAsync(o => o.Id == order.Id);
+                if (existingOrder == null)
+                {
+                    return NotFound();
+                }
+
+                // Update order details
+                existingOrder.FirstName = order.FirstName;
+                existingOrder.LastName = order.LastName;
+                existingOrder.Phone = order.Phone;
+                existingOrder.Email = order.Email;
+                existingOrder.Address = order.Address;
+                existingOrder.ShippingMethod = order.ShippingMethod;
+                existingOrder.PaymentMethod = order.PaymentMethod;
+                existingOrder.TotalPrice = order.TotalPrice;
+                existingOrder.Status = order.Status;
+
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Thông tin đơn hàng đã được cập nhật thành công!";
+                return RedirectToAction("OrderDetails", new { orderId = order.Id });
+            }
+
+            // If model state is not valid, return the view with validation messages
+            return View("~/Views/Admin/OrderServices/EditOrder.cshtml", order);
         }
 
         // Cập nhật trạng thái đơn hàng
@@ -385,6 +473,7 @@ namespace Final.Controllers
     {
         public string UserName { get; set; }
         public string Email { get; set; }
+        public string PhoneNumber { get; set; }
         public bool IsActive { get; set; }
     }
 

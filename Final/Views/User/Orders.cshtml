@@ -1,73 +1,113 @@
 ﻿@model List<Final.Models.Order>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8" />
-    <title>Danh sách đơn hàng</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-</head>
-<body>
-    <div class="container mt-4">
-        <h2>Danh sách đơn hàng của bạn</h2>
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+}
 
-        @if (ViewData["Message"] != null)
-        {
-            <p class="text-info">@ViewData["Message"]</p>
-        }
-        else
-        {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Mã đơn hàng</th>
-                        <th>Ngày đặt</th>
-                        <th>Tổng tiền</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var order in Model)
-                    {
-                        <tr>
-                            <td>@order.Id</td>
-                            <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@order.TotalPrice.ToString("N0") VNĐ</td>
-                            <td>@order.Status</td>
-                            <td>
-                                <button class="btn btn-info btn-sm" onclick="showDetails(@order.Id)">Xem chi tiết</button>
-                            </td>
-                        </tr>
-                        <tr id="details-@order.Id" style="display:none;">
-                            <td colspan="5">
-                                <ul>
-                                    @foreach (var item in order.OrderItems)
-                                    {
-                                        <li>
-                                            @item.Product.Name - Số lượng: @item.Quantity - Giá: @item.Price.ToString("N0") VNĐ
-                                        </li>
-                                    }
-                                </ul>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
 
-        <a asp-action="Product" class="btn btn-primary">Tiếp tục mua sắm</a>
+@if (ViewData["Message"] != null)
+{
+    <div class="alert alert-info">
+        @ViewData["Message"]
     </div>
+}
 
-    <script>
-        function showDetails(orderId) {
-            var detailsRow = document.getElementById("details-" + orderId);
-            if (detailsRow.style.display === "none") {
-                detailsRow.style.display = "table-row";
-            } else {
-                detailsRow.style.display = "none";
-            }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<h2>Danh sách đơn hàng của bạn</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Chi tiết</th>
+            <th>Yêu cầu hủy đơn hàng</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@order.TotalPrice.ToString("N0") VNĐ</td>
+                <td>@order.Status</td>
+                <td>
+                    <button class="btn btn-info btn-sm" onclick="showDetails(@order.Id)">Xem chi tiết</button>
+                </td>
+                <td>
+                    @if (order.Status != "Cancelled" && order.Status != "Completed")
+                    {
+                        <form method="post" action="/User/RequestCancelOrder">
+                            <input type="hidden" name="orderId" value="@order.Id" />
+                            <button type="submit" class="btn btn-warning btn-sm">Yêu cầu hủy</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-sm" disabled>Không thể hủy</button>
+                    }
+                </td>
+            </tr>
+            <tr id="details-@order.Id" style="display:none;">
+                <td colspan="6">
+                    <ul>
+                        <li>Họ tên: @order.FirstName @order.LastName</li>
+                        <li>Số điện thoại: @order.Phone</li>
+                        <li>Email: @order.Email</li>
+                        <li>Địa chỉ: @order.Address</li>
+                        <li>Phương thức vận chuyển: @order.ShippingMethod</li>
+                        <li>Phương thức thanh toán: @order.PaymentMethod</li>
+                        <li>Thành phố: @order.City</li>
+                        <li>Cửa hàng: @order.Store</li>
+                        <li>Ghi chú: @order.Notes</li>
+                        @foreach (var item in order.OrderItems)
+                        {
+                            <li>
+                                @item.Product.Name - Số lượng: @item.Quantity - Giá: @item.Price.ToString("N0") VNĐ
+                            </li>
+                        }
+                    </ul>
+                </td>
+            </tr>
         }
-    </script>
-</body>
-</html>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Bạn chưa có đơn hàng nào.</p>
+}
+
+<a asp-action="Product" class="btn btn-primary">Tiếp tục mua sắm</a>
+
+<script>
+    function showDetails(orderId) {
+        var detailsRow = document.getElementById("details-" + orderId);
+        if (detailsRow.style.display === "none") {
+            detailsRow.style.display = "table-row";
+        } else {
+            detailsRow.style.display = "none";
+        }
+    }
+</script>

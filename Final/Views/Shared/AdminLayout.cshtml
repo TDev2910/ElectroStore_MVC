@@ -44,11 +44,12 @@
             <h4>Admin Panel</h4>
             <p>Xin chào, @User.Identity.Name!</p>
         </div>
-        <a asp-controller="Admin" asp-action="Dashboard">Trang chủ</a>
+        
         <a asp-controller="Admin" asp-action="Index">Cập nhật thông tin sản phẩm</a>
-        <a asp-controller="Admin" asp-action="EnterSecurityCode">Quản lý người dùng</a>
         <a asp-controller="Admin" asp-action="OrderList">Quản lý đơn hàng</a>
         <a asp-controller="Admin" asp-action="FeedbackList">Quản lý phản hồi</a>
+        <a asp-controller="Admin" asp-action="EnterSecurityCode">Quản lý người dùng</a>
+        <a asp-controller="Admin" asp-action="EnterSecurityCodeDashboard">Thống kê</a>
         <a asp-controller="Home" asp-action="Logout">Đăng xuất</a>
     </div>
 
